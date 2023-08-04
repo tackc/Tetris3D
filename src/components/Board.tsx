@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import Square from "./Square";
-import I from "./I";
-import T from "./T";
 import { useKeyboardControls } from "@react-three/drei";
 import { Controls } from "../main";
 import { Group } from "three";
 import { IBoardProps } from "../definitions";
+import I from "./I";
+import O from "./O";
+import T from "./T";
 import S from "./S";
 import Z from "./Z";
 import J from "./J";
@@ -72,7 +72,7 @@ const Board = ({ position }: IBoardProps) => {
       <I position={[-3, 8.5, 0]} groupRef={activeTetrominoRef} />
 
       {/* The O */}
-      <Square position={[0, 1, 0]} groupRef={activeTetrominoRef} />
+      <O position={[0, 1, 0]} groupRef={activeTetrominoRef} />
 
       {/* The T */}
       <T position={[0.5, 5, 0]} groupRef={activeTetrominoRef} />
