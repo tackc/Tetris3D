@@ -8,6 +8,7 @@ export interface IMinoProps {
 }
 
 export interface ITetrominoProps {
-  position?: [x: number, y: number, z: number];
+  position: [x: number, y: number, z: number];
   groupRef?: any;
+  shapeMatrix: number[][];
 }
