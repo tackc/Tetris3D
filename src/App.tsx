@@ -1,7 +1,6 @@
 import { OrbitControls, meshBounds, useHelper } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Lights from "./Lights";
-import { Mesh } from "three";
 import Board from "./components/Board";
 
 const App = () => {
