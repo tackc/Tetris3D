@@ -16,7 +16,7 @@ const App = () => {
       <OrbitControls target={[0, 10, 0]} />
       <axesHelper scale={[10, 10, 10]} />
 
-      <Board />
+      <Board position={[-5, 0, 0]} />
     </Canvas>
   );
 };
