@@ -350,7 +350,7 @@ const Board = ({ position }: IBoardProps) => {
 
   useEffect(() => {
     console.log("matrix changed");
-    let rowsToClear = 0;
+    const rowsToClear: number[] = [];
 
     matrix.map((row, i) => {
       let rowFull = true;
@@ -362,12 +362,50 @@ const Board = ({ position }: IBoardProps) => {
       if (rowFull) {
         // setMatrix(newShiftedMatrix)
         console.log("rowFull = true");
-        rowsToClear++;
+        rowsToClear.push(i);
       }
     });
 
+    if (rowsToClear.length > 0) {
+      const newMatrix = [...matrix];
+
+      rowsToClear.forEach((row) => {
+        newMatrix.splice(row, 1);
+        newMatrix.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      });
+
+      setMatrix(newMatrix);
+      soundRowClear.play();
+    }
     console.log("rows cleared", rowsToClear);
   }, [matrix]);
+
+  useFrame((state, delta) => {
+    timeElapsed.current += delta;
+    frames.current++;
+    // console.log(timeElapsed, frames);
+    if (timeElapsed.current > tick.current + 1 / gravity.current) {
+      tick.current += 1 / gravity.current;
+      const newY = y + 1;
+      const shape = SHAPE_ORIENTATIONS[currentShape][currentOrientation];
+
+      if (checkCollisions(x, newY, shape)) {
+        const newMatrix = [...matrix];
+        shape.map((row, i) => {
+          row.map((column, j) => {
+            if (column === 1) {
+              newMatrix[i + y][j + x] = 1;
+              console.log("inserting to board");
+            }
+          });
+        });
+        setMatrix(newMatrix);
+        resetActiveShape();
+      } else {
+        setY(newY);
+      }
+    }
+  });
 
   return (
     <group position={position}>
