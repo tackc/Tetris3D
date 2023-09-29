@@ -294,6 +294,30 @@ const Board = ({ position }: IBoardProps) => {
             setY(newY);
           }
         }
+
+        if (pressed.moveDownFast) {
+          let newY = y + 1;
+          const shape = SHAPE_ORIENTATIONS[currentShape][currentOrientation];
+
+          for (let k = 0; k < 20; k++) {
+            if (checkCollisions(x, newY, shape)) {
+              const newMatrix = [...matrix];
+              shape.map((row, i) => {
+                row.map((column, j) => {
+                  if (column === 1) {
+                    newMatrix[i + y + k][j + x] = 1;
+                    console.log("inserting to board");
+                  }
+                });
+              });
+              setMatrix(newMatrix);
+              resetActiveShape();
+              break;
+            }
+            newY++;
+          }
+        }
+
         if (pressed.rotateClockwise) {
           const newOrientation =
             (currentOrientation + 1) % SHAPE_ORIENTATIONS[currentShape].length;
