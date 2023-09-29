@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Line, useKeyboardControls } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { Controls } from "../main";
 import { Group } from "three";
-import { IBoardProps } from "../definitions";
+
 import ActiveShape from "./ActiveShape";
 import Mino from "./Mino";
 
+import { IBoardProps } from "../definitions";
+
 // https://tildesites.bowdoin.edu/~echown/courses/210/javalab9/TetrisAssignment.pdf
+// Game Sounds - https://mixkit.co/free-sound-effects/game/
 
 const SHAPE_ORIENTATIONS = [
   // The T
@@ -165,11 +169,10 @@ const randomShape = (): number => {
   return Math.floor(Math.random() * SHAPE_ORIENTATIONS.length);
 };
 
+const soundRowClear = new Audio("./mixkit-arcade-retro-changing-tab-206.wav");
+
 const Board = ({ position }: IBoardProps) => {
   const [matrix, setMatrix] = useState<number[][]>([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -186,12 +189,20 @@ const Board = ({ position }: IBoardProps) => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  const [x, setX] = useState(0);
+  const [x, setX] = useState(3);
   const [y, setY] = useState(0);
   const [currentOrientation, setCurrentOrientation] = useState(0);
   const [currentShape, setCurrentShape] = useState(randomShape());
+
+  const timeElapsed = useRef(0);
+  const frames = useRef(0);
+  const tick = useRef(0);
+  const gravity = useRef(1);
 
   const activeTetrominoRef = useRef<Group>(null);
 
@@ -232,8 +243,9 @@ const Board = ({ position }: IBoardProps) => {
   };
 
   const resetActiveShape = () => {
-    setX(0);
+    setX(3);
     setY(0);
+    setCurrentOrientation(0);
     setCurrentShape(randomShape());
   };
 
